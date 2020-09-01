@@ -56,8 +56,4 @@
         <!-- not doing anything here, ratecard meta is only for placeholder references -->
     </xsl:template>
 
-    <xsl:template name="VersionNumber">
-        <xsl:param name="number"/>
-    </xsl:template>
-
 </xsl:stylesheet>

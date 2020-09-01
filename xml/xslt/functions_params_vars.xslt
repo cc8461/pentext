@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:my="http://www.radical.sexy"
-    exclude-result-prefixes="xs my" version="2.0">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ros="http://www.radical.sexy"
+    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+    exclude-result-prefixes="xs ros" version="2.0">
 
     <!-- color scheme, just change these to change colors throughout the suite -->
     <xsl:variable name="c_main">#e2632a</xsl:variable>
@@ -199,14 +201,18 @@
                                             <xsl:when test="$optional">0</xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:call-template name="computeFee">
-                                                  <xsl:with-param name="for" select="effort/min"/>
+                                                    <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
+                                                    <xsl:with-param name="effort" select="effort/min"/>
+                                                    <xsl:with-param name="in" select="effort/@in"/>
                                                 </xsl:call-template>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </min>
                                     <max>
                                         <xsl:call-template name="computeFee">
-                                            <xsl:with-param name="for" select="effort/max"/>
+                                            <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
+                                            <xsl:with-param name="effort" select="effort/max"/>
+                                            <xsl:with-param name="in" select="effort/@in"/>
                                         </xsl:call-template>
                                     </max>
                                 </xsl:when>
@@ -217,14 +223,19 @@
                                             <xsl:when test="$optional">0</xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:call-template name="computeFee">
-                                                  <xsl:with-param name="for" select="effort"/>
+                                                    
+                                                    <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
+                                                    <xsl:with-param name="effort" select="effort" as="xs:decimal"/>
+                                                    <xsl:with-param name="in" select="effort/@in"/>
                                                 </xsl:call-template>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </min>
                                     <max>
                                         <xsl:call-template name="computeFee">
-                                            <xsl:with-param name="for" select="effort"/>
+                                            <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
+                                            <xsl:with-param name="effort" select="effort" as="xs:decimal"/>
+                                            <xsl:with-param name="in" select="effort/@in"/>
                                         </xsl:call-template>
                                     </max>
                                 </xsl:otherwise>
@@ -251,16 +262,23 @@
             </entry>
         </xsl:for-each>
     </xsl:variable>
-    <xsl:template name="computeFee">
-        <xsl:param name="for"/>
+    
+    <xd:doc><xd:desc>Compute the fee by multiplying hourly rate with time spent</xd:desc>
+        <xd:param name="hourlyRate">Hourly rate</xd:param>
+        <xd:param name="effort">Time spent; can be expressed in hours or days (see 'in')</xd:param>
+        <xd:param name="in">hours|days</xd:param></xd:doc>
+    <xsl:template name="computeFee" as="xs:decimal">
+        <xsl:param name="hourlyRate" as="xs:decimal"/>
+        <xsl:param name="effort" as="xs:decimal"/>
+        <xsl:param name="in" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="effort/@in = 'hours'">
+            <xsl:when test="$in = 'hours'">
                 <!-- multiply with hourly rate -->
-                <xsl:value-of select="$for * hourly_rate"/>
+                <xsl:value-of select="$effort * $hourlyRate"/>
             </xsl:when>
-            <xsl:when test="effort/@in = 'days'">
+            <xsl:when test="$in = 'days'">
                 <!-- multiply with hourly rate * 8 -->
-                <xsl:value-of select="$for * hourly_rate * 8"/>
+                <xsl:value-of select="$effort * $hourlyRate * 8"/>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -381,8 +399,32 @@
     </xsl:template>
 
     <!-- document version number (mostly for report) -->
+    
+    <xsl:variable name="numberOfVersionsInDocument" as="xs:integer">
+        <xsl:call-template name="getNumberOfVersions"/>
+    </xsl:variable>
+
+    <xsl:template name="getNumberOfVersions" as="xs:integer">
+        <xsl:value-of select="count(/pentest_report/meta/version_history/version)"/>
+    </xsl:template>
+
+    <xsl:template name="VersionNumber">
+        <xsl:param name="number" select="@number"/>
+        <xsl:choose>
+            <!-- if value is auto, do some autonumbering magic -->
+            <xsl:when test="string(@number) = 'auto'"> 0.<xsl:value-of select="$numberOfVersionsInDocument"/>
+                <!-- this is really unrobust :D - todo: follow fixed numbering if provided -->
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- just plop down the value -->
+                <!-- todo: guard numbering format in schema -->
+                <xsl:value-of select="@number"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
     <xsl:variable name="latestVersionNumber">
-        <xsl:for-each select="//version_history/version">
+        <xsl:for-each select="/pentest_report/meta/version_history/version">
             <xsl:sort select="xs:dateTime(@date)" order="descending"/>
             <xsl:if test="position() = 1">
                 <xsl:call-template name="VersionNumber">
@@ -412,7 +454,7 @@
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:for-each select="//version_history/version">
+                <xsl:for-each select="/*/meta/version_history/version">
                     <xsl:sort select="xs:dateTime(@date)" order="descending"/>
                     <xsl:if test="position() = 1">
                         <xsl:value-of
@@ -576,10 +618,13 @@
     </xsl:variable>
 
     <!-- titlecase function -->
-    <xsl:function name="my:titleCase" as="xs:string">
+    <xd:doc>
+        <xd:desc>Capitalizes word except if it's hard-coded to not be capitalized</xd:desc>
+    </xd:doc>
+    <xsl:function name="ros:titleCase" as="xs:string">
         <xsl:param name="s" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="lower-case($s) = ('and', 'or')">
+            <xsl:when test="lower-case($s) = ('and', 'or', 'a', 'an', 'the', 'in')">
                 <xsl:value-of select="lower-case($s)"/>
             </xsl:when>
             <xsl:when test="$s = upper-case($s)">
@@ -592,9 +637,9 @@
         </xsl:choose>
     </xsl:function>
 
-    <xsl:function name="my:calculatePeriod">
-        <xsl:param name="enddate"/>
-        <xsl:param name="startdate"/>
+    <xsl:function name="ros:calculatePeriod">
+        <xsl:param name="enddate" as="xs:date"/>
+        <xsl:param name="startdate" as="xs:date"/>
         <xsl:variable name="startYear" as="xs:integer" select="year-from-date($startdate)"/>
         <xsl:variable name="startMonth" as="xs:integer" select="month-from-date($startdate)"/>
         <xsl:variable name="startDay" as="xs:integer" select="day-from-date($startdate)"/>
@@ -678,34 +723,34 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:if test="$numYears > 0">
-            <xsl:sequence select="$numYears"/>
-            <xsl:text>year</xsl:text>
+            <xsl:value-of select="$numYears"/>
+            <xsl:text> year</xsl:text>
             <xsl:if test="$numYears > 1">
                 <xsl:text>s</xsl:text>
             </xsl:if>
             <xsl:choose>
                 <xsl:when
                     test="($numMonths > 0 and $numDays = 0) or ($numMonths = 0 and $numDays > 0)">
-                    <xsl:text> and</xsl:text>
+                    <xsl:text> and </xsl:text>
                 </xsl:when>
                 <xsl:when test="$numMonths > 0 and $numDays > 0">
-                    <xsl:text>,</xsl:text>
+                    <xsl:text>, </xsl:text>
                 </xsl:when>
             </xsl:choose>
         </xsl:if>
         <xsl:if test="$numMonths > 0">
-            <xsl:sequence select="$numMonths"/>
-            <xsl:text>month</xsl:text>
+            <xsl:value-of select="$numMonths"/>
+            <xsl:text> month</xsl:text>
             <xsl:if test="$numMonths > 1">
                 <xsl:text>s</xsl:text>
             </xsl:if>
             <xsl:if test="$numDays > 0">
-                <xsl:text> and</xsl:text>
+                <xsl:text> and </xsl:text>
             </xsl:if>
         </xsl:if>
         <xsl:if test="$numDays > 0">
-            <xsl:sequence select="$numDays"/>
-            <xsl:text>day</xsl:text>
+            <xsl:value-of select="$numDays"/>
+            <xsl:text> day</xsl:text>
             <xsl:if test="$numDays > 1">
                 <xsl:text>s</xsl:text>
             </xsl:if>

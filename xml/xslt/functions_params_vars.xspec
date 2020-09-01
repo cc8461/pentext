@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description
+   xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:ros="http://www.radical.sexy"
+   stylesheet="functions_params_vars.xslt">
+   <x:scenario
+      label="Scenario for testing function computeFee">
+      <x:scenario
+         label="with effort in hours">
+         <x:call
+            template="computeFee">
+            <x:param
+               name="hourlyRate"
+               select="100"/>
+            <x:param
+               name="effort"
+               select="2"/>
+            <x:param
+               name="in"
+               select="'hours'"/>
+         </x:call>
+         <x:expect
+            label="Total amount properly calculated"
+            select="200"/>
+      </x:scenario>
+      <x:scenario
+         label="with effort in days">
+         <x:call
+            template="computeFee">
+            <x:param
+               name="hourlyRate"
+               select="100"/>
+            <x:param
+               name="effort"
+               select="2"/>
+            <x:param
+               name="in"
+               select="'days'"/>
+         </x:call>
+         <x:expect
+            label="Total amount properly calculated"
+            select="1600"/>
+      </x:scenario>
+   </x:scenario>
+   <x:scenario
+      pending="Still to devise"
+      label="Scenario for testing function selectColor">
+      <x:call
+         template="selectColor">
+         <x:param
+            name="label"
+            select="'no_value'"/>
+         <x:param
+            name="position"
+            select="'no_value'"/>
+      </x:call>
+      <x:expect
+         label="Not yet implemented"
+         select="'Not yet implemented'"/>
+   </x:scenario>
+   <x:scenario
+      label="Scenario for testing function titleCase">
+      <x:scenario
+         label="with a word that should be capitalized">
+         <x:call
+            function="ros:titleCase">
+            <x:param
+               name="s">mouse</x:param>
+         </x:call>
+         <x:expect
+            label="'mouse' properly capitalized"
+            select="'Mouse'"/>
+      </x:scenario>
+      <x:scenario
+         label="with a word that should not be capitalized">
+         <x:call
+            function="ros:titleCase">
+            <x:param
+               name="s">an</x:param>
+         </x:call>
+         <x:expect
+            label="'an' properly capitalized"
+            select="'an'"/>
+      </x:scenario>
+   </x:scenario>
+   <x:scenario
+      label="Scenario for testing template getNumberOfVersions">
+      <x:scenario
+         label="with version count">
+         <x:context
+            href="../source/report.xml"/>
+         <x:call
+            template="getNumberOfVersions"/>
+         <x:expect
+            label="count number of versions"
+            select="3"/>
+      </x:scenario>
+   </x:scenario>
+   <x:scenario
+      label="Scenario for testing function calculatePeriod">
+      <x:call
+         function="ros:calculatePeriod">
+         <x:param
+            name="enddate"
+            select="xs:date('2020-08-22')"/>
+         <x:param
+            name="startdate"
+            select="xs:date('1995-03-21')"/>
+      </x:call>
+      <x:expect
+         label="Period correctly calculated and presented">25 years, 5 months and 1 day</x:expect>
+   </x:scenario>
+</x:description>

@@ -508,6 +508,7 @@
             </xsl:for-each>
         </xsl:for-each-group>
     </xsl:variable>
+    
     <xsl:variable name="findingSummaryTable">
         <xsl:for-each select="$unsortedFindingSummaryTable/findingEntry">
             <xsl:sort data-type="number" order="descending"

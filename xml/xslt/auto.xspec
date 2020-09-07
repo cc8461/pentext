@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="generate_report.xsl">
+    
+    <x:scenario
+        label="Scenario for testing template with match 'generate_targets">
+        <x:context href="../source/report.xml" select="/pentest_report/section[1]/section[2]/generate_targets[1]"/>
+        <x:expect
+            label="Targets 1 and 2 generated as list">
+            <fo:list-block xmlns:fo="http://www.w3.org/1999/XSL/Format" provisional-distance-between-starts="0.7cm" provisional-label-separation="2mm" padding-top="0.2cm" padding-bottom="0.5cm">
+                <fo:list-item line-height="6.5mm" keep-together.within-page="always">
+                    <fo:list-item-label end-indent="label-end()">
+                        <fo:block>
+                            <fo:inline>•</fo:inline>
+                        </fo:block>
+                    </fo:list-item-label>
+                    <fo:list-item-body start-indent="body-start()">
+                        <fo:block>Target 1</fo:block>
+                    </fo:list-item-body>
+                </fo:list-item>
+                <fo:list-item line-height="6.5mm" keep-together.within-page="always">
+                    <fo:list-item-label end-indent="label-end()">
+                        <fo:block>
+                            <fo:inline>•</fo:inline>
+                        </fo:block>
+                    </fo:list-item-label>
+                    <fo:list-item-body start-indent="body-start()">
+                        <fo:block>Target 2</fo:block>
+                    </fo:list-item-body>
+                </fo:list-item>
+            </fo:list-block>
+        </x:expect>
+    </x:scenario>
+    <x:scenario
+        label="Scenario for testing function targets" pending="Tested implicitly with generate_targets test">
+        <x:call
+            template="targets">
+            <x:param
+                name="Ref"
+                select="'no_value'"/>
+        </x:call>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing template with match 'generate_teammembers">
+        <x:context href="../source/report.xml"/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function teammembers">
+        <x:call
+            template="teammembers"/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario pending="This is so frustrating"
+        label="Scenario for testing template with match 'generate_findings">
+        <!--<x:context><generate_findings/></x:context>-->
+        <x:call template="generate_findings">
+            <x:param name="Ref"></x:param>
+            <x:param name="statusSequence"></x:param>
+            <x:param name="findingSummaryTable">
+                <findingEntry Ref="" status="none" findingId="finding1">
+                    <findingNumber>SID-001</findingNumber>
+                    <findingType>Test</findingType>
+                    <findingDescription>This is the desc</findingDescription>
+                    <findingThreatLevel>Elevated</findingThreatLevel>
+                </findingEntry>
+                <findingEntry Ref="" status="unresolved" findingId="finding2">
+                    <findingNumber>SID-002</findingNumber>
+                    <findingType>Test</findingType>
+                    <findingDescription>This is the desc</findingDescription>
+                    <findingThreatLevel>Moderate</findingThreatLevel>
+                </findingEntry>
+            </x:param>
+        </x:call>
+        <x:expect
+            label="Properly generate finding table">
+            <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format">
+                <fo:table table-layout="fixed" width="100%" margin-bottom="2mm" border-after-width.conditionality="retain" border-before-width.conditionality="retain" border-color="#444444" border-width="1pt" border-style="solid">
+                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(12)"/>
+                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(22)"/>
+                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(50)"/>
+                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(16)"/>
+                    <fo:table-body>
+                        <fo:table-row keep-with-next.within-column="always">
+                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
+                                <fo:block>ID</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
+                                <fo:block>Type</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
+                                <fo:block>Description</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
+                                <fo:block>Threat level</fo:block>
+                            </fo:table-cell>
+                        </fo:table-row>
+                    </fo:table-body>
+                </fo:table>
+            </fo:block>
+        </x:expect>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function findingsSummaryContent">
+        <x:call
+            template="findingsSummaryContent"/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing template with match 'generate_recommendations">
+        <x:context/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function recommendationsSummaryContent">
+        <x:call
+            template="recommendationsSummaryContent"/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing template with match 'generate_testteam">
+        <x:context/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing template with match 'generate_permission_parties">
+        <x:context/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing template with match 'generate_service_breakdown">
+        <x:context/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function calculateTotal">
+        <x:call
+            template="calculateTotal">
+            <x:param
+                name="denoms"
+                select="'no_value'"
+                tunnel="yes"/>
+        </x:call>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function checkDenomination">
+        <x:call
+            template="checkDenomination">
+            <x:param
+                name="allDenominationsAreEqual"
+                select="'no_value'"/>
+            <x:param
+                name="denoms"
+                select="'no_value'"/>
+        </x:call>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function calculatePersonDays">
+        <x:call
+            template="calculatePersonDays"/>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+    <x:scenario
+        pending="Not yet implemented"
+        label="Scenario for testing function prettyMissingDecimal">
+        <x:call
+            template="prettyMissingDecimal">
+            <x:param
+                name="n"
+                select="'no_value'"/>
+        </x:call>
+        <x:expect
+            label="Not yet implemented"
+            select="'Not yet implemented'"/>
+    </x:scenario>
+</x:description>

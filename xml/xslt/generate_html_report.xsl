@@ -588,7 +588,7 @@
             <div class="row">
                 <div class="six columns">
                     <span class="findingMetaBoxLabel">Vulnerability ID: </span>
-                    <xsl:apply-templates select="." mode="number"/>
+                    <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                 </div>
                 <xsl:if test="@status">
                     <div class="six columns">
@@ -919,7 +919,7 @@
                             <xsl:text>#</xsl:text>
                             <xsl:value-of select="@id"/>
                         </xsl:attribute>
-                        <xsl:apply-templates select="." mode="number"/>
+                        <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                     </a>
                 </div>
             </td>

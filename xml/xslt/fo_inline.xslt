@@ -82,7 +82,7 @@
                         <xsl:value-of select="local-name()"/>
                         <xsl:text> </xsl:text>
                     </xsl:if>
-                    <xsl:apply-templates select="." mode="number"/>
+                    <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                         </xsl:when>
                     <xsl:otherwise>
                         <xsl:if test="not(local-name() = 'appendix')">
@@ -90,7 +90,7 @@
                         <xsl:value-of select="local-name()"/>
                         <xsl:text> </xsl:text>
                     </xsl:if>
-                    <xsl:apply-templates select="." mode="number"/>
+                    <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                     </xsl:otherwise>
                 </xsl:choose>
                 </xsl:for-each>
@@ -133,7 +133,7 @@
                             <xsl:value-of select="local-name()"/>
                             <xsl:text> </xsl:text>
                         </xsl:if>
-                        <xsl:apply-templates select="." mode="number"/>
+                        <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>
@@ -230,7 +230,7 @@
                     </xsl:attribute>
                     <xsl:text>[</xsl:text>
                     <xsl:for-each select="key('biblioid', $bibid)">
-                        <xsl:apply-templates select="." mode="number"/>
+                        <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                     </xsl:for-each>
                     <xsl:text>]</xsl:text>
                 </fo:basic-link>

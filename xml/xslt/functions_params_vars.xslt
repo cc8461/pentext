@@ -472,56 +472,20 @@
     </xsl:variable>
 
     <!-- Finding stuff -->
-    <xsl:variable name="unsortedFindingSummaryTable">
-        <xsl:for-each-group select="//finding" group-by="@threatLevel">
-            <xsl:for-each select="current-group()">
-                <findingEntry>
-                    <xsl:attribute name="Ref">
-                        <xsl:value-of select="@Ref"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="status">
-                        <xsl:value-of select="@status"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="findingId">
-                        <xsl:value-of select="@id"/>
-                    </xsl:attribute>
-                    <findingNumber>
-                        <xsl:apply-templates select="." mode="number"/>
-                    </findingNumber>
-                    <findingType>
-                        <xsl:value-of select="@type"/>
-                    </findingType>
-                    <findingDescription>
-                        <xsl:choose>
-                            <xsl:when test="description_summary">
-                                <xsl:value-of select="description_summary"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:apply-templates select="description" mode="summarytable"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </findingDescription>
-                    <findingThreatLevel>
-                        <xsl:value-of select="current-grouping-key()"/>
-                    </findingThreatLevel>
-                </findingEntry>
-            </xsl:for-each>
-        </xsl:for-each-group>
-    </xsl:variable>
-    
+
     <xsl:variable name="findingSummaryTable">
-        <xsl:for-each select="$unsortedFindingSummaryTable/findingEntry">
+        <xsl:for-each-group select="$source-document//finding" group-by="@threatLevel">
             <xsl:sort data-type="number" order="descending"
                 select="
-                    (number(findingThreatLevel = 'Extreme') * 10)
-                    + (number(findingThreatLevel = 'High') * 9)
-                    + (number(findingThreatLevel = 'Elevated') * 8)
-                    + (number(findingThreatLevel = 'Moderate') * 7)
-                    + (number(findingThreatLevel = 'Low') * 6)
-                    + (number(findingThreatLevel = 'Unknown') * 3)
-                    + (number(findingThreatLevel = 'N/A') * 1)"/>
+                    (number(current-grouping-key() = 'Extreme') * 10)
+                    + (number(current-grouping-key() = 'High') * 9)
+                    + (number(current-grouping-key() = 'Elevated') * 8)
+                    + (number(current-grouping-key() = 'Moderate') * 7)
+                    + (number(current-grouping-key() = 'Low') * 6)
+                    + (number(current-grouping-key() = 'Unknown') * 3)
+                    + (number(current-grouping-key() = 'N/A') * 1)"/>
             <xsl:variable name="findingThreatLevelClean"
-                select="translate(findingThreatLevel, '/', '_')"/>
+                select="translate(current-grouping-key(), '/', '_')"/>
             <findingEntry>
                 <xsl:attribute name="Ref">
                     <xsl:value-of select="@Ref"/>
@@ -530,28 +494,37 @@
                     <xsl:value-of select="@status"/>
                 </xsl:attribute>
                 <xsl:attribute name="findingId">
-                    <xsl:value-of select="@findingId"/>
+                    <xsl:value-of select="@id"/>
                 </xsl:attribute>
-                <!-- add an id for the first entry of each type so that we can link to it -->
+                <!--<!-\- add an id for the first entry of each type so that we can link to it -\->
                 <xsl:if
                     test="not(preceding-sibling::findingEntry/findingThreatLevel = findingThreatLevel)">
                     <xsl:attribute name="id">summaryTableThreatLevel<xsl:value-of
                             select="$findingThreatLevelClean"/></xsl:attribute>
-                </xsl:if>
+                </xsl:if>-->
                 <findingNumber>
-                    <xsl:value-of select="findingNumber"/>
+                    <xsl:call-template name="getNumber">
+                        <xsl:with-param name="elementToNumber" select="."/>
+                    </xsl:call-template>
                 </findingNumber>
                 <findingType>
-                    <xsl:value-of select="findingType"/>
+                    <xsl:value-of select="@type"/>
                 </findingType>
                 <findingDescription>
-                    <xsl:value-of select="findingDescription"/>
+                    <xsl:choose>
+                        <xsl:when test="description_summary">
+                            <xsl:value-of select="description_summary"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:apply-templates select="description" mode="summarytable"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </findingDescription>
                 <findingThreatLevel>
-                    <xsl:value-of select="findingThreatLevel"/>
+                    <xsl:value-of select="current-grouping-key()"/>
                 </findingThreatLevel>
             </findingEntry>
-        </xsl:for-each>
+        </xsl:for-each-group>
     </xsl:variable>
 
     <!-- Money stuff -->

@@ -27,7 +27,7 @@
                         </xsl:if>
                         <fo:block xsl:use-attribute-sets="finding-meta">
                             <fo:inline xsl:use-attribute-sets="bold">Vulnerability ID: </fo:inline>
-                            <xsl:apply-templates select="." mode="number"/>
+                            <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                         </fo:block>
                     </fo:table-cell>
                     <xsl:if

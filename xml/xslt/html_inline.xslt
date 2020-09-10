@@ -58,7 +58,7 @@
                         <xsl:value-of select="local-name()"/>
                         <xsl:text> </xsl:text>
                     </xsl:if>
-                    <xsl:apply-templates select="." mode="number"/>
+                    <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
@@ -87,7 +87,7 @@
                             <xsl:value-of select="local-name()"/>
                             <xsl:text> </xsl:text>
                         </xsl:if>
-                        <xsl:apply-templates select="." mode="number"/>
+                        <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:otherwise>

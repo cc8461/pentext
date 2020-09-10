@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:ros="http://www.radical.sexy"
-    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
-    exclude-result-prefixes="xs ros" version="2.0">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ros="http://www.radical.sexy" xmlns:fo="http://www.w3.org/1999/XSL/Format" 
+    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" exclude-result-prefixes="xs ros" version="2.0">
+
+    <!-- Setting the source document explicitly to facilitate testing -->
+    <xsl:variable name="source-document" as="document-node()" select="."/>
 
     <!-- color scheme, just change these to change colors throughout the suite -->
     <xsl:variable name="c_main">#e2632a</xsl:variable>
@@ -83,8 +84,7 @@
     <xsl:variable name="serviceNodeSet">
         <!-- putting the logic for all calculation in this imaginary nodeset; output to fo comes below -->
         <xsl:for-each select="//breakdown/service | //breakdown/extra">
-            <xsl:variable name="minmaxeffortPresent"
-                select="boolean(effort/min and effort/max)"/>
+            <xsl:variable name="minmaxeffortPresent" select="boolean(effort/min and effort/max)"/>
             <xsl:variable name="minmaxFeePresent" select="boolean(fee/min and fee/max)"/>
             <xsl:variable name="effortPresent"
                 select="boolean(normalize-space(effort) and normalize-space(effort/@in))"/>
@@ -201,16 +201,18 @@
                                             <xsl:when test="$optional">0</xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:call-template name="computeFee">
-                                                    <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
-                                                    <xsl:with-param name="effort" select="effort/min"/>
-                                                    <xsl:with-param name="in" select="effort/@in"/>
+                                                  <xsl:with-param name="hourlyRate"
+                                                  select="hourly_rate" as="xs:decimal"/>
+                                                  <xsl:with-param name="effort" select="effort/min"/>
+                                                  <xsl:with-param name="in" select="effort/@in"/>
                                                 </xsl:call-template>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </min>
                                     <max>
                                         <xsl:call-template name="computeFee">
-                                            <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
+                                            <xsl:with-param name="hourlyRate" select="hourly_rate"
+                                                as="xs:decimal"/>
                                             <xsl:with-param name="effort" select="effort/max"/>
                                             <xsl:with-param name="in" select="effort/@in"/>
                                         </xsl:call-template>
@@ -223,18 +225,22 @@
                                             <xsl:when test="$optional">0</xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:call-template name="computeFee">
-                                                    
-                                                    <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
-                                                    <xsl:with-param name="effort" select="effort" as="xs:decimal"/>
-                                                    <xsl:with-param name="in" select="effort/@in"/>
+
+                                                  <xsl:with-param name="hourlyRate"
+                                                  select="hourly_rate" as="xs:decimal"/>
+                                                  <xsl:with-param name="effort" select="effort"
+                                                  as="xs:decimal"/>
+                                                  <xsl:with-param name="in" select="effort/@in"/>
                                                 </xsl:call-template>
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </min>
                                     <max>
                                         <xsl:call-template name="computeFee">
-                                            <xsl:with-param name="hourlyRate" select="hourly_rate" as="xs:decimal"/>
-                                            <xsl:with-param name="effort" select="effort" as="xs:decimal"/>
+                                            <xsl:with-param name="hourlyRate" select="hourly_rate"
+                                                as="xs:decimal"/>
+                                            <xsl:with-param name="effort" select="effort"
+                                                as="xs:decimal"/>
                                             <xsl:with-param name="in" select="effort/@in"/>
                                         </xsl:call-template>
                                     </max>
@@ -262,11 +268,13 @@
             </entry>
         </xsl:for-each>
     </xsl:variable>
-    
-    <xd:doc><xd:desc>Compute the fee by multiplying hourly rate with time spent</xd:desc>
+
+    <xd:doc>
+        <xd:desc>Compute the fee by multiplying hourly rate with time spent</xd:desc>
         <xd:param name="hourlyRate">Hourly rate</xd:param>
         <xd:param name="effort">Time spent; can be expressed in hours or days (see 'in')</xd:param>
-        <xd:param name="in">hours|days</xd:param></xd:doc>
+        <xd:param name="in">hours|days</xd:param>
+    </xd:doc>
     <xsl:template name="computeFee" as="xs:decimal">
         <xsl:param name="hourlyRate" as="xs:decimal"/>
         <xsl:param name="effort" as="xs:decimal"/>
@@ -399,7 +407,7 @@
     </xsl:template>
 
     <!-- document version number (mostly for report) -->
-    
+
     <xsl:variable name="numberOfVersionsInDocument" as="xs:integer">
         <xsl:call-template name="getNumberOfVersions"/>
     </xsl:variable>
@@ -412,7 +420,8 @@
         <xsl:param name="number" select="@number"/>
         <xsl:choose>
             <!-- if value is auto, do some autonumbering magic -->
-            <xsl:when test="string(@number) = 'auto'"> 0.<xsl:value-of select="$numberOfVersionsInDocument"/>
+            <xsl:when test="string(@number) = 'auto'"> 0.<xsl:value-of
+                    select="$numberOfVersionsInDocument"/>
                 <!-- this is really unrobust :D - todo: follow fixed numbering if provided -->
             </xsl:when>
             <xsl:otherwise>
@@ -422,7 +431,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:variable name="latestVersionNumber">
         <xsl:for-each select="/pentest_report/meta/version_history/version">
             <xsl:sort select="xs:dateTime(@date)" order="descending"/>
@@ -730,4 +739,6 @@
             </xsl:if>
         </xsl:if>
     </xsl:function>
+    
+    
 </xsl:stylesheet>

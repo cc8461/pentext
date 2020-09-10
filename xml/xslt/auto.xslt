@@ -58,15 +58,15 @@
         </fo:list-block>
     </xsl:template>
 
-    <xsl:template match="generate_findings">
-        <xsl:variable name="Ref" select="@Ref"/>
-        <xsl:variable name="statusSequence" as="item()*">
+    <xsl:template match="generate_findings" name="generate_findings">
+        <xsl:param name="Ref" select="@Ref"/>
+        <xsl:param name="statusSequence" as="item()*">
             <xsl:for-each select="@status">
                 <xsl:for-each select="tokenize(., ' ')">
                     <xsl:value-of select="."/>
                 </xsl:for-each>
             </xsl:for-each>
-        </xsl:variable>
+        </xsl:param>
         <fo:block>
             <fo:table xsl:use-attribute-sets="fwtable table borders">
                 <xsl:call-template name="checkIfLast"/>
@@ -239,7 +239,7 @@
                         <xsl:attribute name="internal-destination">
                             <xsl:value-of select="@id"/>
                         </xsl:attribute>
-                        <xsl:apply-templates select="." mode="number"/>
+                        <xsl:call-template name="getNumber">                         <xsl:with-param name="elementToNumber" select="."/>                     </xsl:call-template>
                     </fo:basic-link>
                 </fo:block>
             </fo:table-cell>

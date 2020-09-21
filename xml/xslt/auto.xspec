@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="generate_report.xsl">
+<x:description  xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="generate_report.xsl">
+    <x:variable name="findingSummaryTable" select="/">
+        <findingEntry Ref="" status="unresolved" findingId="finding3">
+            <findingNumber>SID-003</findingNumber>
+            <findingType>Test</findingType>
+            <findingDescription>Description contents</findingDescription>
+            <findingThreatLevel>High</findingThreatLevel>
+        </findingEntry>
+        <findingEntry Ref="" status="none" findingId="finding1">
+            <findingNumber>SID-001</findingNumber>
+            <findingType>Test</findingType>
+            <findingDescription>This is the desc</findingDescription>
+            <findingThreatLevel>Elevated</findingThreatLevel>
+        </findingEntry>
+        <findingEntry Ref="" status="unresolved" findingId="finding2">
+            <findingNumber>SID-002</findingNumber>
+            <findingType>Test</findingType>
+            <findingDescription>Description contents</findingDescription>
+            <findingThreatLevel>Moderate</findingThreatLevel>
+        </findingEntry>
+    </x:variable>
     
     <x:scenario
         label="Scenario for testing template with match 'generate_targets">
         <x:context href="../source/report.xml" select="/pentest_report/section[1]/section[2]/generate_targets[1]"/>
         <x:expect
             label="Targets 1 and 2 generated as list">
-            <fo:list-block xmlns:fo="http://www.w3.org/1999/XSL/Format" provisional-distance-between-starts="0.7cm" provisional-label-separation="2mm" padding-top="0.2cm" padding-bottom="0.5cm">
+            <fo:list-block provisional-distance-between-starts="0.7cm" provisional-label-separation="2mm" padding-top="0.2cm" padding-bottom="0.5cm">
                 <fo:list-item line-height="6.5mm" keep-together.within-page="always">
                     <fo:list-item-label end-indent="label-end()">
                         <fo:block>
@@ -31,16 +51,36 @@
         </x:expect>
     </x:scenario>
     <x:scenario
-        label="Scenario for testing function targets" pending="Tested implicitly with generate_targets test">
+        label="Scenario for testing function targets">
+        <x:context href="../source/report.xml" select="/"/>
         <x:call
             template="targets">
-            <x:param
-                name="Ref"
-                select="'no_value'"/>
         </x:call>
         <x:expect
-            label="Not yet implemented"
-            select="'Not yet implemented'"/>
+            label="Targets 1 and 2 generated as list">
+            <fo:list-block provisional-distance-between-starts="0.7cm" provisional-label-separation="2mm" padding-top="0.2cm" padding-bottom="0.5cm">
+                <fo:list-item line-height="6.5mm" keep-together.within-page="always">
+                    <fo:list-item-label end-indent="label-end()">
+                        <fo:block>
+                            <fo:inline>•</fo:inline>
+                        </fo:block>
+                    </fo:list-item-label>
+                    <fo:list-item-body start-indent="body-start()">
+                        <fo:block>Target 1</fo:block>
+                    </fo:list-item-body>
+                </fo:list-item>
+                <fo:list-item line-height="6.5mm" keep-together.within-page="always">
+                    <fo:list-item-label end-indent="label-end()">
+                        <fo:block>
+                            <fo:inline>•</fo:inline>
+                        </fo:block>
+                    </fo:list-item-label>
+                    <fo:list-item-body start-indent="body-start()">
+                        <fo:block>Target 2</fo:block>
+                    </fo:list-item-body>
+                </fo:list-item>
+            </fo:list-block>
+        </x:expect>
     </x:scenario>
     <x:scenario
         pending="Not yet implemented"
@@ -59,63 +99,27 @@
             label="Not yet implemented"
             select="'Not yet implemented'"/>
     </x:scenario>
-    <x:scenario pending="This is so frustrating"
-        label="Scenario for testing template with match 'generate_findings">
-        <!--<x:context><generate_findings/></x:context>-->
-        <x:call template="generate_findings">
-            <x:param name="Ref"></x:param>
-            <x:param name="statusSequence"></x:param>
-            <x:param name="findingSummaryTable">
-                <findingEntry Ref="" status="none" findingId="finding1">
-                    <findingNumber>SID-001</findingNumber>
-                    <findingType>Test</findingType>
-                    <findingDescription>This is the desc</findingDescription>
-                    <findingThreatLevel>Elevated</findingThreatLevel>
-                </findingEntry>
-                <findingEntry Ref="" status="unresolved" findingId="finding2">
-                    <findingNumber>SID-002</findingNumber>
-                    <findingType>Test</findingType>
-                    <findingDescription>This is the desc</findingDescription>
-                    <findingThreatLevel>Moderate</findingThreatLevel>
-                </findingEntry>
-            </x:param>
-        </x:call>
-        <x:expect
-            label="Properly generate finding table">
-            <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format">
-                <fo:table table-layout="fixed" width="100%" margin-bottom="2mm" border-after-width.conditionality="retain" border-before-width.conditionality="retain" border-color="#444444" border-width="1pt" border-style="solid">
-                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(12)"/>
-                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(22)"/>
-                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(50)"/>
-                    <fo:table-column border-color="#444444" border-width="1pt" border-style="solid" column-width="proportional-column-width(16)"/>
-                    <fo:table-body>
-                        <fo:table-row keep-with-next.within-column="always">
-                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
-                                <fo:block>ID</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
-                                <fo:block>Type</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
-                                <fo:block>Description</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt" padding-right="4pt" padding-top="3pt" padding-bottom="3pt" background-color="#e2632a" color="white">
-                                <fo:block>Threat level</fo:block>
-                            </fo:table-cell>
-                        </fo:table-row>
-                    </fo:table-body>
-                </fo:table>
-            </fo:block>
-        </x:expect>
-    </x:scenario>
+    
+    
     <x:scenario
-        pending="Not yet implemented"
+        label="Scenario for testing template with match 'generate_findings">
+        <x:context href="../source/report.xml" select="/"/>
+        <x:call template="generate_findings"/>
+        <x:expect label="resulting table should have 4 rows (1 header, 3 finding rows)"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row => count() = 4"/>
+        <x:expect label="first finding in table should be finding 3"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[2]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/text() = 'SID-003'"/>
+        <x:expect label="second finding in table should link to 'finding2'"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[3]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/@internal-destination"/>
+    </x:scenario>
+    
+    
+    <x:scenario pending="hold now"
         label="Scenario for testing function findingsSummaryContent">
         <x:call
             template="findingsSummaryContent"/>
         <x:expect
-            label="Not yet implemented"
-            select="'Not yet implemented'"/>
+            label="Not yet implemented">Test</x:expect>
     </x:scenario>
     <x:scenario
         pending="Not yet implemented"

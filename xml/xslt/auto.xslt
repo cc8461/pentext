@@ -3,11 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs"
     xmlns:fo="http://www.w3.org/1999/XSL/Format" version="2.0">
 
-    <xsl:template match="generate_targets">
-        <xsl:call-template name="targets"/>
-    </xsl:template>
-
-    <xsl:template name="targets">
+    <xsl:template match="generate_targets" name="targets">
         <xsl:param name="Ref" select="@Ref"/>
         <fo:list-block xsl:use-attribute-sets="list">
             <xsl:for-each

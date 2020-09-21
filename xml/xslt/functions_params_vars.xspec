@@ -2,38 +2,8 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" xmlns:ros="http://www.radical.sexy"
    stylesheet="generate_report.xsl">
 
-   <x:variable name="source-document">
-      <pentest_report findingCode="SID">
-         <finding id="finding1" type="Test" threatLevel="Elevated" number="1" status="none">
-            <title>Finding 1</title>
-            <description><p>This is the desc</p></description>
-            <technicaldescription><p>This is the techdesc</p><img width="13"
-                  src="../graphics/screenshot.jpg" border="1"/></technicaldescription>
-            <impact><p>This is the impact</p></impact>
-            <recommendation>These are the recs</recommendation>
-            <update>This should not show up in document.</update>
-         </finding>
-         <finding id="finding2" type="Test" threatLevel="Moderate" number="2" status="unresolved">
-            <title>Finding 2</title>
-            <description>Description contents</description>
-            <technicaldescription>
-               <p>Tech description contents</p>
-            </technicaldescription>
-            <impact>Impact</impact>
-            <recommendation>Recs</recommendation>
-            <update date="2020-08-31" version="1.1">Problem persists.</update>
-         </finding>
-         <finding id="finding3" type="Test" threatLevel="High" number="3" status="unresolved">
-            <title>Finding 3</title>
-            <description>Description contents</description>
-            <technicaldescription>
-               <p>Tech description contents</p>
-            </technicaldescription>
-            <impact>Impact</impact>
-            <recommendation>Recs</recommendation>
-            <update date="2020-08-31" version="1.1">Problem persists.</update>
-         </finding></pentest_report>
-   </x:variable>
+   
+   <x:variable name="source-document" href="../source/report.xml" select="/"/>
 
    <x:scenario label="Scenario for testing function computeFee">
       <x:scenario label="with effort in hours">
@@ -117,8 +87,7 @@
          <x:param name="enddate" select="xs:date('2020-08-22')"/>
          <x:param name="startdate" select="xs:date('1995-03-21')"/>
       </x:call>
-      <x:expect label="Period correctly calculated and presented">25 years, 5 months and 1
-         day</x:expect>
+      <x:expect label="Period correctly calculated and presented">25 years, 5 months and 1 day</x:expect>
    </x:scenario>
 
 

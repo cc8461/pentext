@@ -5,6 +5,7 @@
 
     <!-- Setting the source document explicitly to facilitate testing -->
     <xsl:variable name="source-document" as="document-node()" select="."/>
+    <xsl:variable name="test" select="local-name(.)"/>
 
     <!-- color scheme, just change these to change colors throughout the suite -->
     <xsl:variable name="c_main">#e2632a</xsl:variable>

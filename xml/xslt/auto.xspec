@@ -82,8 +82,9 @@
             </fo:list-block>
         </x:expect>
     </x:scenario>
+    
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in contract context"
         label="Scenario for testing template with match 'generate_teammembers">
         <x:context href="../source/report.xml"/>
         <x:expect
@@ -91,7 +92,7 @@
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in contract context"
         label="Scenario for testing function teammembers">
         <x:call
             template="teammembers"/>
@@ -103,34 +104,38 @@
     
     <x:scenario
         label="Scenario for testing template with match 'generate_findings">
-        <x:context href="../source/report.xml" select="/"/>
-        <x:call template="generate_findings"/>
+        <x:context href="../source/report.xml" select="//generate_findings"/>
+        <!-- we can test the matching template since it uses the $findingSummaryTable var defined in the beginning -->
         <x:expect label="resulting table should have 4 rows (1 header, 3 finding rows)"
             test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row => count() = 4"/>
         <x:expect label="first finding in table should be finding 3"
             test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[2]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/text() = 'SID-003'"/>
-        <x:expect label="second finding in table should link to 'finding2'"
-            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[3]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/@internal-destination"/>
+        <x:expect label="second finding in table should link to 'finding1'"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[3]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/@internal-destination/string()" select="'finding1'"/>
     </x:scenario>
     
     
-    <x:scenario pending="hold now"
+    <x:scenario pending="Implicitly tested while matching 'generate_findings'"
         label="Scenario for testing function findingsSummaryContent">
         <x:call
             template="findingsSummaryContent"/>
         <x:expect
             label="Not yet implemented">Test</x:expect>
     </x:scenario>
+    
     <x:scenario
-        pending="Not yet implemented"
         label="Scenario for testing template with match 'generate_recommendations">
-        <x:context/>
-        <x:expect
-            label="Not yet implemented"
-            select="'Not yet implemented'"/>
+        <x:context href="../source/report.xml" select="//generate_recommendations"/>
+        <x:expect label="resulting table should have 4 rows (1 header, 3 finding rows)"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row => count() = 4"/>
+        <x:expect label="first finding in table should be finding 1 (recs are sorted on number not threatLevel)"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[2]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/text() = 'SID-001'"/>
+        <x:expect label="second finding in table should link to 'finding2'"
+            test="/fo:block[1]/fo:table[1]/fo:table-body[1]/fo:table-row[3]/fo:table-cell[1]/fo:block[1]/fo:basic-link[1]/@internal-destination/string()" select="'finding2'"/>
     </x:scenario>
+    
     <x:scenario
-        pending="Not yet implemented"
+        pending="Implicitly tested while matching 'generate_recommendations"
         label="Scenario for testing function recommendationsSummaryContent">
         <x:call
             template="recommendationsSummaryContent"/>
@@ -139,23 +144,50 @@
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
         label="Scenario for testing template with match 'generate_testteam">
-        <x:context/>
+        <x:context href="../source/report.xml" select="//generate_testteam"/>
         <x:expect
-            label="Not yet implemented"
-            select="'Not yet implemented'"/>
+            label="Table with pentester names and bios">
+            <fo:block><fo:table table-layout="fixed" width="100%" border-color="#444444"
+                border-width="1pt" border-style="solid">
+                <fo:table-column border-color="#444444" border-width="1pt" border-style="solid"
+                    column-width="proportional-column-width(25)"/>
+                <fo:table-column border-color="#444444" border-width="1pt" border-style="solid"
+                    column-width="proportional-column-width(75)"/>
+                <fo:table-body>
+                    <fo:table-row border-color="#444444" border-width="1pt" border-style="solid">
+                        <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt"
+                            padding-right="4pt" padding-top="3pt" padding-bottom="3pt">
+                            <fo:block>FirstName LastName</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt"
+                            padding-right="4pt" padding-top="3pt" padding-bottom="3pt">
+                            <fo:block>Info</fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row border-color="#444444" border-width="1pt" border-style="solid">
+                        <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt"
+                            padding-right="4pt" padding-top="3pt" padding-bottom="3pt">
+                            <fo:block>Firstname Lastname</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell start-indent="0" end-indent="0" padding-left="4pt"
+                            padding-right="4pt" padding-top="3pt" padding-bottom="3pt">
+                            <fo:block>Info</fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </fo:table-body>
+            </fo:table></fo:block>
+        </x:expect>
     </x:scenario>
-    <x:scenario
-        pending="Not yet implemented"
+    <x:scenario pending="TODO test in quote context"
         label="Scenario for testing template with match 'generate_permission_parties">
-        <x:context/>
+        <x:context href="../source/quote.xml" select="//generate_permission_parties"/>
         <x:expect
             label="Not yet implemented"
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in quote context"
         label="Scenario for testing template with match 'generate_service_breakdown">
         <x:context/>
         <x:expect
@@ -163,7 +195,7 @@
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in quote context"
         label="Scenario for testing function calculateTotal">
         <x:call
             template="calculateTotal">
@@ -177,7 +209,7 @@
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in quote context"
         label="Scenario for testing function checkDenomination">
         <x:call
             template="checkDenomination">
@@ -193,7 +225,7 @@
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in quote context"
         label="Scenario for testing function calculatePersonDays">
         <x:call
             template="calculatePersonDays"/>
@@ -202,7 +234,7 @@
             select="'Not yet implemented'"/>
     </x:scenario>
     <x:scenario
-        pending="Not yet implemented"
+        pending="TODO test in quote context"
         label="Scenario for testing function prettyMissingDecimal">
         <x:call
             template="prettyMissingDecimal">
